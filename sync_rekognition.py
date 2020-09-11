@@ -5,6 +5,7 @@ import time
 import os
 import json
 
+
 def download_labels(image_url):
     image_url_path = "Images/" + image_url
     with open(image_url_path, "rb") as image:
@@ -30,11 +31,19 @@ def download_all(images):
     counter = 0
     for image in images:
         download_labels(image)
-        print(++counter)
+        print(counter)
+        counter += 1
+
+
+def get_images():
+    images_list = os.listdir("Images/")
+    labels_list = [x[0:-5] for x in os.listdir("Labels/")]
+    todo_list = [x for x in images_list if x not in labels_list]
+    return todo_list
 
 
 if __name__ == "__main__":
-    images = os.listdir("Images/")
+    images = get_images()
     start_time = time.time()
     download_all(images)
     duration = time.time() - start_time
