@@ -3,16 +3,17 @@ import concurrent.futures
 import threading
 import time
 import os
-import json
+import numpy as np
+
+client = boto3.client('rekognition')
 
 
 def download_labels(image_url):
-    image_url_path = "Images/" + image_url
+    image_url_path = "small_images/" + image_url
     with open(image_url_path, "rb") as image:
         f = image.read()
         b = bytearray(f)
 
-        client = boto3.client('rekognition')
         response = client.detect_faces(
             Image={
                 'Bytes': b
@@ -28,24 +29,25 @@ def download_labels(image_url):
 
 
 def download_all(images):
-    counter = 0
-    for image in images:
-        download_labels(image)
-        print(counter)
-        counter += 1
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        executor.map(download_labels, images)
 
 
 def get_images():
     images_list = os.listdir("Images/")
-    labels_list = [x[0:-5] for x in os.listdir("Labels/")]
-    todo_list = [x for x in images_list if x not in labels_list]
-    return todo_list
+    unchanged_list = os.listdir("Labels/")
+    labels_list = map(remove_type, unchanged_list)
+
+    return np.setdiff1d(images_list, labels_list)
+
+
+def remove_type(string):
+    return string[0,-5]
 
 
 if __name__ == "__main__":
-    images = get_images()
+    image_list = get_images()
     start_time = time.time()
-    images
-    download_all(images)
+    download_all(image_list)
     duration = time.time() - start_time
-    print(f"Downloaded {len(images)} in {duration} seconds")
+    print(f"Downloaded {len(image_list)} in {duration} seconds")
