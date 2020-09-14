@@ -31,7 +31,6 @@ def get_polarity(emo):
         return 0
 
 for json_path in os.listdir(json_dir):
-
     with open(json_dir + '/' + json_path) as file:
         json_labels = json.load(file)
         json_labels = json_labels['FaceDetails']
