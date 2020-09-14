@@ -1,17 +1,38 @@
 import pandas as pd
 import json
 import statistics
-from pandas.io.json import json_normalize
 import os
 import csv
 
 csv_path = "cleaned_labels.csv"
 csv_rows = [
     ["id", "face_amount", "happy", "sad", "angry", "confused", "disgusted", "surprised", "calm", "fear", "beard",
-     "mustache"]]
-
+     "mustache", "key_emotion", "polarity"]]
 json_dir = 'Labels'
+
+
+def get_key_emotion(dict):
+    key_emo = ''
+    max_value = 0.
+    for emo, value in dict.items():
+        if max_value < value:
+            key_emo = emo
+            max_value= value
+    return key_emo
+
+def get_polarity(emo):
+    positive_emotions = ['HAPPY']
+    negative_emotions = ['SAD', 'ANGRY', 'DISGUSTED', 'FEAR']
+
+    if emo in positive_emotions:
+        return 1
+    elif emo in negative_emotions:
+        return -1
+    else:
+        return 0
+
 for json_path in os.listdir(json_dir):
+
     with open(json_dir + '/' + json_path) as file:
         json_labels = json.load(file)
         json_labels = json_labels['FaceDetails']
@@ -48,6 +69,22 @@ for json_path in os.listdir(json_dir):
             calm.append(facial_emotions['CALM'])
             fear.append(facial_emotions['FEAR'])
 
+
+
+    em = {}
+    em['HAPPY'] = statistics.mean(happy)
+    em['SAD'] = statistics.mean(sad)
+    em['ANGRY'] = statistics.mean(angry)
+    em['CONFUSED'] = statistics.mean(confused)
+    em['DISGUSTED'] = statistics.mean(disgusted)
+    em['SURPRISED'] = statistics.mean(surprised)
+    em['CALM'] = statistics.mean(calm)
+    em['FEAR'] = statistics.mean(fear)
+
+    key_emotion = get_key_emotion(em)
+    polarity = get_polarity(key_emotion)
+
+
     for beard in beards:
         if beard['Value']:
             beard_factor.append(1)
@@ -60,29 +97,14 @@ for json_path in os.listdir(json_dir):
         else:
             mustache_factor.append(0)
 
-    happy_mean = statistics.mean(happy)
-    sad_mean = statistics.mean(sad)
-    angry_mean = statistics.mean(angry)
-    confused_mean = statistics.mean(confused)
-    disgusted_mean = statistics.mean(disgusted)
-    surprised_mean = statistics.mean(surprised)
-    calm_mean = statistics.mean(calm)
-    fear_mean = statistics.mean(fear)
     beard_mean = statistics.mean(beard_factor)
     mustache_mean = statistics.mean(mustache_factor)
 
+
     csv_rows.append(
-        [id, face_amount, happy_mean, sad_mean, angry_mean, confused_mean, disgusted_mean, surprised_mean, calm_mean,
-         fear_mean, beard_mean, mustache_mean])
+        [id, face_amount, em['HAPPY'], em['SAD'], em['ANGRY'], em['CONFUSED'], em['DISGUSTED'], em['SURPRISED'],
+         em['CALM'], em['FEAR'], beard_mean, mustache_mean, key_emotion, polarity])
 
 with open(csv_path, 'w', newline='') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerows(csv_rows)
-
-# j = pd.json_normalize(json_labels)
-# print(j)
-
-"""
-    for key, value in json_labels['FaceDetails']:
-        if key == "Emotions":
-            print(value)"""
