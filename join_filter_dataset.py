@@ -66,7 +66,7 @@ def perceived_trust(row):
     return row['number_of_reviews'] / row['availability_365']
 
 def remove_percent(string):
-    string.replace('%','')
+    return string.replace('%','')
 
 if __name__ == "__main__":
     main()
