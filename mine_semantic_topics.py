@@ -23,6 +23,10 @@ def topics_from_description(description):
             if value.lower() in description.lower():
                 topic_quantities[key] += 1
 
+    # Normalize from 0 to 1
+    for key,value in topic_quantities.items():
+        topic_quantities[key] = value/len(topics[key])
+
     return topic_quantities
 
 def create_csv():

@@ -3,6 +3,8 @@ import statistics
 import os
 import csv
 
+#todo modularize and clean the code
+
 csv_path = "cleaned_labels.csv"
 csv_rows = [
     ["id", "face_amount", "happy", "sad", "angry", "confused", "disgusted", "surprised", "calm", "fear", "beard",

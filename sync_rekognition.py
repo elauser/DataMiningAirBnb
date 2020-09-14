@@ -46,6 +46,7 @@ if __name__ == "__main__":
     images = get_images()
     start_time = time.time()
     images
+
     download_all(images)
     duration = time.time() - start_time
     print(f"Downloaded {len(images)} in {duration} seconds")
