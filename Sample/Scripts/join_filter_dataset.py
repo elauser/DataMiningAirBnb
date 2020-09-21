@@ -51,6 +51,7 @@ def prepare_sentiment_intensity():
     return df[['id', 'Sentiment_intensity']]
 
 
+
 def quantify_response_time(time):
     if time == 'within an hour':
         return 1
