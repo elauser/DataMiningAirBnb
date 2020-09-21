@@ -14,6 +14,7 @@ regr.fit(X, Y)
 
 print('Intercept: \n', regr.intercept_)
 print('Coefficients: \n', regr.coef_)
+print(regr)
 
 """model = sm.OLS(Y, X)
 results = model.fit()"""

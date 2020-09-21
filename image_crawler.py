@@ -24,6 +24,6 @@ async def download_image(url, file, session):
 
 
 if __name__ == "__main__":
-    with open("listingsNy.csv", encoding="utf-8") as csv_file:
+    with open("SourceData/listingsNY_aug.csv", encoding="utf-8") as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=",")
         asyncio.get_event_loop().run_until_complete(download_all_images(csv_reader))

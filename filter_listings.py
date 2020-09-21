@@ -9,7 +9,7 @@ def is_english(row):
         return False
 
 
-df = pd.read_csv("listingsNY.csv")
+df = pd.read_csv("SourceData/listingsNY_aug.csv")
 df.replace(to_replace='<.*?>', value="", regex=True, inplace=True)
 df = df[df.apply(is_english, axis=1)]
 df.replace(to_replace=[r"\\t|\\n|\\r", "\t|\n|\r"], value=[" "," "], regex=True, inplace=True)

@@ -3,7 +3,7 @@ import statistics
 import os
 import csv
 
-#todo modularize and clean the code
+#todo modularize and clean the code, make uncle bob proud again
 
 csv_path = "cleaned_labels.csv"
 csv_rows = [

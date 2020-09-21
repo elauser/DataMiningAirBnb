@@ -2,7 +2,7 @@ import csv
 
 def get_all_topics():
     topic_list = [["id", "t1", "t2", "t3", "t4"]]
-    with open("listingsNY.csv", encoding="utf-8") as csv_file:
+    with open("SourceData/listingsNY_aug.csv", encoding="utf-8") as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=",")
         for row in csv_reader:
             topics = topics_from_description(row['description'])
